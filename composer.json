@@ -1,0 +1,28 @@
+{
+  "name": "Team 7 Pipeline Dashboard",
+  "description": "Team7 Dashboard",
+  "keywords": [
+    "css",
+    "js",
+    "less",
+    "responsive",
+    "back-end",
+    "template",
+    "theme",
+    "web",
+    "admin"
+  ],
+  "authors": [
+    {
+      "name": "Amy Stewart",
+      "email": "acs43@students.uwf.edu"
+    }
+
+    {
+      "name": "Jake Hebert",
+      "email": "jsh40@students.uwf.edu"
+    }
+  ],
+  
+  }
+}
