@@ -23,13 +23,12 @@
 
   <script type="text/javascript">
 window.onload = function () {
-  var chart = new CanvasJS.Chart("chartContainer",
+  var chart = new CanvasJS.Chart("chartContainer")
   {
     title:{
       text: "Total Tasks",
-    
     },
-                animationEnabled: true,
+    animationEnabled: true,
     data: [
     {        
       type: "doughnut",
@@ -41,18 +40,18 @@ window.onload = function () {
         {  y: 1, indexLabel: "Admin Interface" },
         {  y: 1, indexLabel: "DB Utilities Oracle" },
         {  y: 7,  indexLabel: "Authentication"},
-        {  y: 1,  indexLabel: "DB Utilities MySQL"}
+        {  y: 1,  indexLabel: "DB Utilities MySQL"},
         {  y: 1, indexLabel: "CC Processing" },
         {  y: 1, indexLabel: "User Interface" },
         {  y: 10, indexLabel: "Python Interface" },
         {  y: 7,  indexLabel: "Messages Spanish"},
-        {  y: 1,  indexLabel: "Partner Interface"}
+        {  y: 1,  indexLabel: "Partner Interface"},
         {  y: 6, indexLabel: "Image Processing" },
         {  y: 2, indexLabel: "Messages Mandarin" },
         {  y: 1, indexLabel: "DB Utilities Oracle" },
         {  y: 7,  indexLabel: "Data Objects"},
-        {  y: 1,  indexLabel: "Messages English"}
-        {  y: 6, indexLabel: "Customer Management" },
+        {  y: 1,  indexLabel: "Messages English"},
+        {  y: 6, indexLabel: "Customer Management" }
       ]
     }
     ]
@@ -60,6 +59,59 @@ window.onload = function () {
   chart.render();
 }
 </script>
+	
+	<!-- CVS Scripting -->
+	<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+
+	<script>
+		// Opening the File
+		$.ajax({
+		  url: 'eventData003.csv',
+		  dataType: 'text',
+		}).done(csvToArray);
+
+		var lines = []; // original data pulled from CSV
+		var linesEdit = []; // edited lines array
+	
+		// The conversion from CSV to a JavaScript Array
+		function csvToArray(allText) {
+			var allTextLines = allText.split(/\r\n|\n/);
+			var headers = allTextLines[0].split(',');
+
+			for (var i = 1; i < allTextLines.length; i++) {
+				var data = allTextLines[i].split(',');
+				if (data.length == headers.length) {
+
+					var tarr = [];
+					for (var j = 0; j < headers.length; j++) {
+						tarr.push(data[j]);
+					}
+					lines.push(tarr);
+				}
+			}
+			
+			console.log(lines); //for debugging, can remove
+			search(3, "1476402617004");
+			console.log(linesEdit);
+		}
+		
+		function search(position, value) {
+			linesEdit = [];
+			var sortedIndex = 0;
+			for (var row = 0; row < lines.length; row++) {
+				if(lines[row][position].trim() == value) {
+					linesEdit[sortedIndex] = lines[row];
+					sortedIndex++;
+				}
+			}
+		}
+		
+		function defaultView() {
+			
+		}
+	</script>
+	<!-- End CVS Scripting -->
+	
 <script type="text/javascript" src="/assets/script/canvasjs.min.js"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
