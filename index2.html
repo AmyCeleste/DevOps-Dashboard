@@ -89,10 +89,8 @@ window.onload = function () {
 					lines.push(tarr);
 				}
 			}
-			
-			console.log(lines); //for debugging, can remove
-			search(3, "1476402617004");
-			console.log(linesEdit);
+			linesEdit = lines;
+			defaultView();
 		}
 		
 		function search(position, value) {
@@ -107,7 +105,135 @@ window.onload = function () {
 		}
 		
 		function defaultView() {
+			// Changes Table Title
+			document.getElementById("tableTitle").innerHTML = "All Processes";
 			
+			// Create Table
+			document.getElementById("tableOutput").innerHTML = "";
+			var header = [3, 0, 1, 2, 4, 6]
+			var table = createTable(header);
+			document.getElementById("tableOutput").appendChild(table);
+		}
+		
+		function multiView(colNum, value) {
+			// Changes Table Title
+			document.getElementById("tableTitle").innerHTML = processValue(colNum) + " - " + value;
+			
+			// Create and Execute Search Parameters
+			search(colNum, value)
+			
+			// Create Table
+			document.getElementById("tableOutput").innerHTML = "";
+			var header = [3, 0, 1, 2, 4, 6];
+			var removeIndex = header.indexOf(colNum);
+			header.splice(removeIndex, 1);
+			
+			var table = createTable(header);
+			document.getElementById("tableOutput").appendChild(table);
+		}
+		
+		function singleView(ackNum) {
+			// Changes Table Title
+			document.getElementById("tableTitle").innerHTML = "Acknowledgement # " + ackNum;
+			
+			// Create and Execute Search Parameters
+			search(3,ackNum);
+			
+			document.getElementById("tableOutput").innerHTML = "";
+			document.getElementById("tableOutput").innerHTML = "<b>" + processValue(0) + "</b>: " + linesEdit[0][0] + "<br />" + "<b>" + processValue(1) + "</b>: " + linesEdit[0][1] + "<br />" + "<b>" + processValue(2) + "</b>: " + linesEdit[0][2] + "<br />" + "<b>" + processValue(4) + "</b>: " + linesEdit[0][4] + "<br />" + "<b>" + processValue(6) + "</b>: " + linesEdit[0][6] + "<br />";
+		}
+		
+		// Creates a table object
+		function createTable(headers) {
+			var table = document.createElement("table");
+			table.setAttribute("class", "table no-margin");
+			
+			// Header Information
+			var headerBody = document.createElement("thead");
+			var headerRow = document.createElement("tr");
+			for (var i = 0; i < headers.length; i++) {
+				var headerCell = document.createElement("th");
+				headerCell.innerHTML = processValue(headers[i]);
+				headerRow.appendChild(headerCell);
+			}
+			headerBody.appendChild(headerRow);
+			
+			// Body Information
+			var contentBody = document.createElement("tbody");
+			
+			for (var i = 0; i < linesEdit.length; i++) {
+				var contentRow = document.createElement("tr");
+				for (var j = 0; j < headers.length; j++) {
+					var contentCell = document.createElement("td");
+					
+					if (headers[j] == 3) {
+						contentCell.innerHTML = "<a href=\"javascript:singleView('" + linesEdit[i][headers[j]].trim() + "');\">" + linesEdit[i][headers[j]] + "</a>";
+					} else if (headers[j] == 0) {
+						contentCell.innerHTML = "<a href=\"javascript:multiView(0,'" + linesEdit[i][headers[j]].trim() + "');\">" + linesEdit[i][headers[j]] + "</a>";
+					} 
+					else {
+						contentCell.innerHTML = linesEdit[i][headers[j]];
+					}				
+					contentRow.appendChild(contentCell);
+				}
+				contentBody.appendChild(contentRow);
+			}
+			
+			// Combining Header and Footer to Table
+			table.appendChild(headerBody);
+			table.appendChild(contentBody);
+			
+			return table;
+		}
+		
+		function processValue(value) {
+			switch(value) {
+				case "Process":
+					return 0;
+					break;
+				case "Version":
+					return 1;
+					break;
+				case "Activity Type":
+					return 2;
+					break;
+				case "Ack #":
+					return 3;
+					break;
+				case "Status":
+					return 4;
+					break;
+				case null:
+					return 5;
+					break;
+				case "User":
+					return 6;
+					break;
+				case 0:
+					return "Process";
+					break;
+				case 1:
+					return "Version";
+					break;
+				case 2: 
+					return "Activity Type";
+					break;
+				case 3:
+					return "Ack #";
+					break;
+				case 4:
+					return "Status";
+					break;
+				case 5:
+					return null;
+					break;
+				case 6:
+					return "User";
+					break;
+				default:
+					return null;
+					break;
+			}
 		}
 	</script>
 	<!-- End CVS Scripting -->
@@ -129,9 +255,9 @@ window.onload = function () {
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>Team 7</b></span>
+      <span class="logo-mini"><b>Team 7</b> | Dashboard</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Team 7</b></span>
+      <span class="logo-lg"><b>Team 7</b> | Dashboard</span>
     </a>
 
     <!-- Header Navbar: style can be found in header.less -->
@@ -296,9 +422,9 @@ window.onload = function () {
          
         
         <li class="header">STATUS</li>
-        <li><a href="pages\examples/fail.html"><i class="fa fa-circle-o text-red"></i> <span>Fail</span></a></li>
-        <li><a href="pages\examples\doubtful.html"><i class="fa fa-circle-o text-yellow"></i> <span>Doubtful</span></a></li>
-        <li><a href="pages\examples\good.html"><i class="fa fa-circle-o text-green"></i> <span>Good</span></a></li>
+        <li><a href="javascript:multiView(4,'fail')"><i class="fa fa-circle-o text-red"></i> <span>Fail</span></a></li>
+        <li><a href="javascript:multiView(4,'doubtful')"><i class="fa fa-circle-o text-yellow"></i> <span>Doubtful</span></a></li>
+        <li><a href="javascript:multiView(4,'good')"><i class="fa fa-circle-o text-green"></i> <span>Good</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -306,14 +432,6 @@ window.onload = function () {
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Dashboard
-        <small>Version 2.0</small>
-      </h1>
-      
-    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -340,7 +458,7 @@ window.onload = function () {
           <!-- TABLE: LATEST Processes -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Latest Processes</h3>
+              <h3 class="box-title" id="tableTitle"> </h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -350,168 +468,15 @@ window.onload = function () {
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <div class="table-responsive">
-                <table class="table no-margin">
-                  <thead>
-                  <tr>
-                    <th>Ack ID</th>
-                    <th>Process</th>
-                    <th>Status</th>
-                    <th>Activity Type</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td><a href="pages/examples/connectionManager.html#1476402617004">1476402617004</a></td>
-                    <td><a href="pages/examples/connectionManager.html">Connection Manager</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td> build</td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/connectionManager.html#1476402617040">1476402617040</a></td>
-                    <td><a href="pages/examples/connectionManager.html">Connection Manager</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>unit test</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681380</td>
-                    <td><a href="pages/examples/adminInterface.html">Admin Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td> build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681466</td>
-                    <td><a href="pages/examples/dbUtilitiesOracle.html">DB Utilities Oracle</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                   <tr>
-                      <td>1476402681500</td>
-                      <td><a href="pages/examples/authentication.html">Authentication</a></td>
-                      <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                      <td>build</td>
-                    </tr>
-                    <tr>
-                    <td>1476402681562</td>
-                    <td><a href="pages/examples/adminInterface.html">Admin Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681641</td>
-                    <td><a href="pages/examples/DBUtilitiesMysql.html">DB Utilities MySQL</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681709</td>
-                    <td><a href="pages/examples/authentication.html">Authentication</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681742</td>
-                    <td><a href="pages/examples/authentication.html">Authentication</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>unit test</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681776</td>
-                    <td><a href="pages/examples/ccProcessing.html">CC Processing</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681809</td>
-                    <td><a href="pages/examples/userInterface.html">User Interface</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681840</td>
-                    <td><a href="pages/examples/pythonInterface.html">Python Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681867</td>
-                    <td><a href="pages/examples/authentication.html">Authentication</a></td>
-                    <td><a href="pages/examples/fail.html"><span class="label label-danger">Fail</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681893</td>
-                    <td><a href="pages/examples/DBUtilitiesMysql.html">DB Utilities MySQL</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402681920</td>
-                    <td><a href="pages/examples/messagesSpanish.html">Messages Spanish</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682007</td>
-                    <td><a href="pages/examples/userInterface.html">User Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682089</td>
-                    <td><a href="pages/examples/messagesEnglish.html">Messages English</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682140</td>
-                    <td><a href="pages/examples/pythonInterface.html">Python Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682184</a></td>
-                    <td><a href="pages/examples/dataObjects.html">Data Objects</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682219</td>
-                    <td><a href="pages/examples/adminInterface.html">Admin Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td><a href="pages/examples/connectionManager.html#1476402682265">1476402682265</a></td>
-                    <td><a href="pages/examples/connectionManager.html">Connection Manager</a></td>
-                    <td><a href="pages/examples/doubtful.html"><span class="label label-warning">Doubtful</span></a></td>
-                    <td>build</td>
-                  </tr>
-                  <tr>
-                    <td>1476402682310</td>
-                    <td><a href="pages/examples/userInterface.html">User Interface</a></td>
-                    <td><a href="pages/examples/good.html"><span class="label label-success">Good</span></a></td>
-                    <td>build</td>
-                  </tr><!--23 -->
-
-
-
-
-
-
-
-
-
-                  </tbody>
-                </table>
+            
+            <!-- Table Output -->
+              <div class="table-responsive" id="tableOutput">
+                
               </div>
+              
               <!-- /.table-responsive -->
             </div>
             <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <a href="pages\examples\404.html" class="btn btn-sm btn-default btn-flat pull-right">View History</a>
-            </div>
-            <!-- /.box-footer   javascript:void(0) -->
           </div>
           <!-- /.box -->
         </div>
