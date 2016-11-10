@@ -140,7 +140,7 @@ window.onload = function () {
 			search(3,ackNum);
 			
 			document.getElementById("tableOutput").innerHTML = "";
-			document.getElementById("tableOutput").innerHTML = "<b>" + processValue(0) + "</b>: " + linesEdit[0][0] + "<br />" + "<b>" + processValue(1) + "</b>: " + linesEdit[0][1] + "<br />" + "<b>" + processValue(2) + "</b>: " + linesEdit[0][2] + "<br />" + "<b>" + processValue(4) + "</b>: " + linesEdit[0][4] + "<br />" + "<b>" + processValue(6) + "</b>: " + linesEdit[0][6] + "<br />";
+			document.getElementById("tableOutput").innerHTML = "<b>" + processValue(0) + "</b>: <a href=\"javascript:multiView(0,'" + linesEdit[0][0] + "');\">" + linesEdit[0][0] + "</a><br />" + "<b>" + processValue(1) + "</b>: " + linesEdit[0][1] + "<br />" + "<b>" + processValue(2) + "</b>: " + linesEdit[0][2] + "<br />" + "<b>" + processValue(4) + "</b>: " + linesEdit[0][4] + "<br />" + "<b>" + processValue(6) + "</b>: <a href=\"pages/examples/defaultProfile.html\">" + linesEdit[0][6] + "</a><br />";
 		}
 		
 		// Creates a table object
@@ -170,8 +170,9 @@ window.onload = function () {
 						contentCell.innerHTML = "<a href=\"javascript:singleView('" + linesEdit[i][headers[j]].trim() + "');\">" + linesEdit[i][headers[j]] + "</a>";
 					} else if (headers[j] == 0) {
 						contentCell.innerHTML = "<a href=\"javascript:multiView(0,'" + linesEdit[i][headers[j]].trim() + "');\">" + linesEdit[i][headers[j]] + "</a>";
-					} 
-					else {
+					} else if (headers[j] == 6) {
+						contentCell.innerHTML = "<a href=\"pages/examples/defaultProfile.html\">" + linesEdit[i][headers[j]] + "</a>";
+					} else {
 						contentCell.innerHTML = linesEdit[i][headers[j]];
 					}				
 					contentRow.appendChild(contentCell);
