@@ -20,6 +20,10 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+a:link {
+    color: #ffffff !important;
+    font-style: italic;
+}
 /* Layout */
 .wrapper {
   min-height: 100%;
